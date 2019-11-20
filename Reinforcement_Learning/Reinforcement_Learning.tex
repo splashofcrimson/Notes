@@ -1,0 +1,116 @@
+\documentclass[a4paper]{article}
+
+\def\nterm {Fall}
+\def\nyear {2019}
+\def\nlecturer {Silver}
+\def\ncourse {Reinforcement Learning}
+
+\input{header}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+\subsection{Definitions}
+
+\begin{defi} Reinforcement Learning\\
+
+(Policy) Defines the behavior of a learning agent based on environmental stimuli\\
+
+(Reward Signal) The end goal of any reinforcement learning problem\\
+
+(Reward) Feedback to the learning agent, this quantity needs to be maximized\\
+
+(Value Function) Long-run quantification of good action by the policy\\
+
+(Value) Total amount of expected reward that an agent can accumulate throughout the future\\
+
+(Model) Mimics the environment that a learning agent will engage with. RL can be either \textit{model-based} or \textit{model-free}\\
+
+\end{defi}
+
+\subsection{History}
+A brief history of reinforcement learning across three separate threads of research.\\
+
+\textbf{Optimal Control:}\\
+
+Late 1950s: The term \textit{Optimal Control} was coined to describe the problem of minimizing/maximizing a dynamical system's performance over time.\\
+
+Bellman 1957a: Dynamic Programming, suffers from the curse of dimensionality.\\
+
+Bellman 1957b: Markov Decision Processes (MDPs).\\
+
+Ronald Howard 1960: Policy Iteration Method for MDPs.\\
+
+Werbos 1987: More interrelation between learning and dynamic-programming.\\
+
+Chris Watkins 1989: Reinforcement Learning with MDP formalism.\\
+
+Bertsekas and Tsitsklis 1996: The term \textit{Neurodynamic Programming} is coined to combine dynamic programming and ANNs.\\
+
+\textbf{Trial-and-Error Learning:}\\
+
+Bain 1850s and Morgan 1894: Basis for learning by 'groping and experiment'.\\
+
+Edward Thorndike 1911: Law of Effect describes the effect of reinforcing events on action selection.\\
+
+Pavlov 1927: Reinforcement is the strengthening of a pattern as per stimulus (reinforcer) with a response.\\
+
+Thomas Ross 1933: Machine that found its way through a simple maze and remembered the path through switch settings.\\
+
+Turing 1948: 'Pleasure-pain system' to impact system configurations.\\
+
+Shannon 1952: Maze-running mouse Theseus uses trial-and-error to find its way through a maze, although the maze itself also remembers the directions of the mouse.\\
+
+Minsky 1954: Analog machine built of SNARCs (Stochastic Neural-Analog Reinforcement Calculators) that represent synaptic connections of the brain.\\
+
+Farley and Clark 1954: Digital simulation of trial-and-error neural network.\\
+
+\textbf{Interjection} --- Confusion over the difference between reinforcement learning and supervised learning caused a drop in research in the 1960s and 1970s.\\
+
+Minsky 1961: Several issues relevant to trial-and-error learning, such as prediction, expectation, and the \textit{basic credit-assignment problem}.\\
+
+Michie 1961: Trial-and-error system to learn tic-tac-toe called MENACE.\\
+
+Michie and Chambers 1968: Improved with GLEE, pole-balancing teacher.\\
+
+Andreae 1969: STeLLA learned by trial-and-error in interaction with an environment.\\
+
+Widrow, Gupta, and Maitra 1973: Least-Mean-Square (LMS) modifications allow it to learn from success/failure signals as opposed to training examples. Called \textit{selective bootstrap adaptation}, learning from a \textit{critic}.\\
+
+Tsetlin 1973: Origins of Learning Automata published posthumously.\\
+
+Cross 1973: Application of Bush and Mostellar learning theory to classical economic models.\\
+
+Tzanakou 1974: Alopex algorithm stochastically detects correlations between actions and reinforcement.\\
+
+John Holland 1975: General theory of adaptive systems based on selection principles.\\
+
+John Holland 1976: Introduced \textit{classifier systems} including association and value functions. Key takeaway: \textit{Genetic Algorithm}\\
+
+Harry Klopf 1981a: Distinction of reinforcement and supervised learning.\\
+
+\textbf{Temporal-Difference Learning:}\\
+
+Minsky 1954: \textit{secondary reinforcers} are stimuli paired with a primary reinforcer like pain - found significance for integration with artificial intelligence.\\
+
+Arthur Samuel 1959: Checkers-playing program implemented using temporal-difference ideas.\\
+
+Klopf 1972: \textit{Generalized Reinforcement} where each component views all inputs as rewards/punishments. This idea was linked with trial-and-error learning.\\
+
+Witten 1977: Combined all three threads of learning.\\
+
+Barto, Sutton, Anderson 1984: \textit{actor-critic architecture} applied to the pole-balancing problem.\\
+
+Holland 1986: Incomporated temporal-difference into bucket-brigade algorithm.\\
+
+Sutton 1988: Separated temporal-difference from control and introduced the $TD(\lambda)$ algorithm.\\
+
+Chris Watkins 1989: Development of Q-Learning.\\
+
+Gerry Tesuaro 1992: TD-Gammon plays Backgammon well.\\
+
+\section{Multi-armed Bandits}
+\end{document}
