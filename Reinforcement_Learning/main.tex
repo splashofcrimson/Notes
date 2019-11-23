@@ -2,7 +2,7 @@
 
 \def\nterm {Fall}
 \def\nyear {2019}
-\def\nlecturer {Sutton}
+\def\nlecturer {Richard S. Sutton}
 \def\ncourse {Reinforcement Learning}
 
 \input{header}
@@ -115,20 +115,20 @@ Gerry Tesuaro 1992: TD-Gammon plays Backgammon well.\\
 \section{Multi-armed Bandits}
 \subsection{$k$-armed Bandits}
 
-Problem Statement: Select from $k$ options repeatedly over $n$ time steps. After each iteration, receive a reward from a fixed probability distribution. How do we maximize the reward over $n$ time steps?\\
+Problem Statement: Select from $k$ options repeatedly over $n$ time steps. After each iteration, receive a reward from a fixed probability distribution. How to maximize the reward over $n$ time steps?\\
 
 Action $A_t$ at time step $t$, with reward $R_t$. Value $q_*(a)$ can be quantified as: $$q_*(a) := \mathbb{E}[R_t | A_t = a]$$
 
-Unfortunately, $q_*(a)$ is not known, so we estimate $Q_t(a)$ at time step $t$ and action $a$ such that $Q_t(a) + \epsilon \approx q_*(a)$.\\
+Unfortunately, $q_*(a)$ is not known, so estimate $Q_t(a)$ at time step $t$ and action $a$ such that $Q_t(a) + \epsilon \approx q_*(a)$.\\
 
-Moves with maximum expected value are known as \textit{greedy actions}. Selecting a greedy action is known as \texit{exploitation}, while selecting a different move is known as \texit{exploration}. A motivating problem, how do we balance exploitation and exploration in order to maximize empirical value?
+Moves with maximum expected value are known as \textit{greedy actions}. Selecting a greedy action is known as \texit{exploitation}, while selecting a different move is known as \texit{exploration}. A motivating problem, how to balance exploitation and exploration in order to maximize empirical value?
 
 \subsection{Action-value Methods}
 Simple action-value method (Sample-average): Take the average of received rewards. $$Q_t(a) := \frac{\sum_{i=1}^{t-1}R_i(A_i = a)}{\sum_{i=1}^{t-1}(A_i = a)}$$
 
 Simple action-selection method (Greedy): Select the option with highest estimated value. $$A_t := argmax_aQ_t(a)$$
 
-This only uses exploitation, how can we explore? $\epsilon$-greedy method: Select a uniformly random option with probability $\epislon$, else select the greedy option.\\
+This only uses exploitation, how about exploration? $\epsilon$-greedy method: Select a uniformly random option with probability $\epislon$, else select the greedy option.\\
 These methods are asymptotically guaranteed to select the optimal action with $1 - \epsilon$ certainly in the far future.
 
 \subsection{Incremental Implementation}
@@ -138,5 +138,46 @@ Incrementally calculate the new averages with constant computations. Take the fo
 
 Where $\alpha_t(a) = \frac{1}{n}$ is the step size and $R_n - Q_n$ is the error.\\
 
-Test
+\subsection{Tracking a Nonstationary Problem}
+What if reward probabilities changed over time? Averages aren't as effective anymore, so give more weight to more recent rewards.\\
+
+Use a constant step-size parameter $\alpha$ in place of $\frac{1}{n}$. Why? $$Q_{n+1} = Q_n + \alpha[R_n - Q_n] = (1 - \alpha)^nQ_1 + \sum_{i=1}^n\alpha(1 - \alpha)^{n-1}R_i$$
+
+Sum of the weights is one (weighted average), and the quantity $\alpha(1 - \alpha)^{n-1}$ reduces in size as the reward becomes more stale. Known as an \textit{exponential recency-weighted average}.\\
+
+Relax the constraints and assume the step-size is variable. Important conditions for convergence to true action values with probability $1$:\\
+\begin{equation}
+\begin{split}
+    \sum_{n=1}^\infty\alpha_n(a) = \infty \hspace{2cm}
+    \sum_{n=1}^\infty\alpha_n^2(a) < \infty
+\end{split}
+\end{equation}
+Sample-average with $\frac{1}{n}$ meets both these conditions, while exponential recency-weighted average with $\alpha$ does not. This is expected, since the latter formulation is important for nonstationary problems.
+
+\subsection{Optimistic Initial Values}
+All these estimates are biased by their initial estimates. This isn't much of a problem for the stationary method, but nonstationary methods can still be impacted by this initial value.\\
+
+For stationary methods, take advantage of these priors, and use $Q_1(a)$ as a prior for the model! If $Q_1(a)$ is initialized to relatively larger values for all $a$, this encourages exploration as early rewards are 'disappointing.' This is unfortunately not very useful for nonstationary methods, since the exploratory phase is temporal in nature, and not specific to the initialization of the problem.
+
+\subsection{Upper-Confidence-Bound Action Selection}
+More room for improvement: $\epsilon$-greedy methods weight all actions equally during exploration. Performance could improve if there was preference for actions that \textbf{could} be optimal. Two important heuristics for tendency towards what is optimal are estimated distance to what is optimal, and uncertainty of the estimate. $$A_t := argmax_a\Bigg[Q_t(a) + c\sqrt\frac{ln(t)}{N_t(a)}\Bigg]$$
+
+$N_t(a)$ refers to the number of times action $a$ is selected, where $N_t(a) = 0$ makes $a$ a maximizing action. $c$ controls the exploration vs exploitation tradeoff.\\
+
+This is known as \textit{upper confidence bound} (UCB) action selection, since the $argmax$'d quantity acts like an upper bound. Term one is the estimated value and term two is the uncertainity, while $c$ is a sort of confidence interval.
+
+\subsection{Gradient Bandit Algorithms}
+Another approach, learn a numerical preference for each action, or $H_t(a)$. Compare relative preferences to decide what actions to take.
+
+$$H_{t+1}(A_t) := H_t(A_t) + \alpha(R_t - \overline{R_t})(1 - \pi_t(A_t)),$$
+$$H_{t+1}(a) := H_t(a) - \alpha(R_t - \overline{R_t})\pi_t(a), \forall a \neq A_t$$
+
+$\alpha$ is the step-size parameter, and $\overline{R_t}$ is the average of all rewards until time $t$ (exclusive). If the reward $R_t$ is larger than $\overline{R_t}$, then $A_t$'s probability is increased, else it is decreased. Other actions engage with the opposite action.\\
+
+$\pi_t$ is defined as a soft-max distribution, or the Gibbs/Boltzmann distribution.
+
+$$Pr{A_t = a} := \frac{e^{H_t(a)}}{\sum_{b=1}^ke^{H_t(b)}}$$
+
+Adding optimistic initialization has no effect here, due to the baseline term $\overline{R_t}$.
+
 \end{document}
